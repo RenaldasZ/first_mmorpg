@@ -34,23 +34,34 @@
 
 ## Here's a quick rundown:
 
-- **Main Files:**
+**Main Files:**
+
 `main.py`: Entry point of the game.
+
 `map_editor.py`: For editing maps. Useful during development.
 
-- **Assets:**
-assets/: Directory for storing game assets like images, sounds, etc.
-maps/: Directory for storing game maps.
+**Assets:**
 
-- **UI:**
+`assets`/: Directory for storing game assets like images, sounds, etc.
+
+`maps`/: Directory for storing game maps.
+
+**UI:**
+
 `menu.py`: Module for handling in-game menus.
+
 `button.py`: Module for creating UI buttons.
 
-- **Source Code:**
+**Source Code:**
+
 `Entities`: Contains classes for game entities like players and enemies.
+
 `Game Logic`: Modules responsible for the core game logic, including game setup, player management, quest handling, and barrier collision detection.
+
 `Systems`: Modules for handling input from players.
+
 `Rendering`: Modules related to rendering the game world.
+
 `Utils`: Utility modules containing helper functions and classes.
 
 ## How to Contribute:
