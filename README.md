@@ -48,10 +48,14 @@ We welcome contributions from developers of all skill levels! If you're interest
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 
-Some screenshots:
+Some screenshots from the game:
 
 ![alt text](<screenshots/Screenshot 2024-04-12 114947.png>)
 ![alt text](<screenshots/Screenshot 2024-04-12 115039.png>)
 ![alt text](<screenshots/Screenshot 2024-04-12 115137.png>)
 ![alt text](<screenshots/Screenshot 2024-04-12 115211.png>)
 ![alt text](<screenshots/Screenshot 2024-04-12 115321.png>)
+
+Integrated own map editor:
+
+![alt text](<screenshots/Screenshot 2024-04-12 115713.png>)
