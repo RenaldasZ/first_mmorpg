@@ -10,6 +10,7 @@ TILE_WELL = 16
 TILE_DARK_GRASS_BODY = 17
 TILE_NPC1 = 20
 TILE_NPC2 = 21
+TILE_NPC3 = 25
 TILE_BOTTOM = 22
 TILE_LEFT = 23
 TILE_BOTTOM_LEFT = 24
@@ -26,6 +27,7 @@ IMAGE_PATHS = {
     TILE_DARK_GRASS_BODY: 'assets/terrain/grass_body2.png',
     TILE_NPC1: 'assets/quest/npc1.png',
     TILE_NPC2: 'assets/quest/npc2.png',
+    TILE_NPC3: 'assets/quest/npc3.png',
     TILE_BOTTOM_LEFT: 'assets/terrain/bottom_left.png'
 }
 

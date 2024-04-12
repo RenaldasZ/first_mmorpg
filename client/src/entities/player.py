@@ -17,12 +17,14 @@ class Player:
         self.attack_range = attack_range
         self.enemy_kill_count = enemy_kill_count
 
-    # Properties and setters omitted for brevity
+    @property
+    def position(self):
+        return self._x, self._y
 
-    def set_position(self, x, y):
-        self._x = x
-        self._y = y
-        self.rect.topleft = (x, y)
+    @position.setter
+    def position(self, new_position):
+        self._x, self._y = new_position
+        self.rect.topleft = new_position
 
     def add_to_inventory(self, item):
         self.inventory.push(item)
@@ -47,7 +49,7 @@ class Player:
             
     def attack(self, enemy):
         # Calculate distance to the enemy
-        distance_to_enemy = math.sqrt((self.x - enemy.x) ** 2 + (self.y - enemy.y) ** 2)
+        distance_to_enemy = math.sqrt((self._x - enemy._x) ** 2 + (self._y - enemy._y) ** 2)
         
         # Check if the enemy is within attack range
         if distance_to_enemy < self.attack_range:

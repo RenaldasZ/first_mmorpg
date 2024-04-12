@@ -29,7 +29,8 @@ OBJECTS = {
     21: 'npc2',
     22: 'Map Bottom',
     23: 'left',
-    24: 'Map bottom left'
+    24: 'Map bottom left',
+    25: 'npc3'
 }
 
 # Define colors for each object
@@ -58,7 +59,8 @@ OBJECT_COLORS = {
     21: 'black',         # npc2
     22: 'black',         # Map Left
     23: 'red',           # Map Bottom
-    24: 'cyan'            # Map bottom left
+    24: 'cyan',          # Map bottom left
+    25: 'magenta'        # npc3
 }
 
 class MapEditor:

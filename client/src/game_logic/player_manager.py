@@ -26,19 +26,18 @@ class PlayerManager:
             self.move_player_to_target()
 
     def move_player_to_target(self):
-        move_vector = pygame.math.Vector2(self.game.target_pos[0] - self.game.player._x, self.game.target_pos[1] - self.game.player._y)
+        move_vector = pygame.math.Vector2(self.game.target_pos[0] - self.game.player.position[0], self.game.target_pos[1] - self.game.player.position[1])
         move_distance = move_vector.length()
 
         if move_distance > 0:
             move_vector.normalize_ip()
             move_vector *= min(move_distance, PLAYER_SPEED)
-            new_pos = pygame.math.Vector2(self.game.player._x, self.game.player._y) + move_vector
+            new_pos = pygame.math.Vector2(self.game.player.position[0], self.game.player.position[1]) + move_vector
 
             if not self.game.collides_with_barrier(new_pos) and 0 <= new_pos.x <= MAP_WIDTH and 0 <= new_pos.y <= MAP_HEIGHT:
-                self.game.player.set_position(new_pos.x, new_pos.y)
-
+                self.game.player.position = (new_pos.x, new_pos.y)
         else:
-            self.game.player.set_position(*self.game.target_pos)
+            self.game.player.position = self.game.target_pos
             self.game.target_pos = None
 
     def render_player_coords(self):
