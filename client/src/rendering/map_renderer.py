@@ -1,4 +1,4 @@
-# src/rendering/map_rendering.py
+# src/rendering/map_renderer.py
 import pygame
 
 # Define tile constants

@@ -1,3 +1,4 @@
+# src/entities/enemy.py
 import math
 
 class Enemy:

@@ -125,7 +125,7 @@ class Game:
     def transition_to_second_map(self):
         if not self.transitioning:
             self.load_map('maps/map2.json')
-            self.player.set_position(9800, 9800)
+            self.player.position = (9800, 9800)
             self.transitioning = True
             item = "Health Potion"
             self.player.add_to_inventory(item)
