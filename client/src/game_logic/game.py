@@ -12,6 +12,11 @@ from src.utils.barrier import collides_with_barrier
 import math
 
 class Game:
+    TILE_NPC_1 = 20
+    TILE_NPC_2 = 21
+    TILE_WELL = 16
+    TILE_TREE = 5
+
     def __init__(self, screen_size, screen):
         # Initialize game components
         self.screen_size = screen_size
@@ -51,8 +56,8 @@ class Game:
     def handle_events(self):
         self.input_handler.handle_events()
         self.check_transition_area_collision()
-        self.handle_npc_interaction()
-        self.handle_npc2_interaction()
+        self.handle_npc_interaction(self.TILE_NPC_1)
+        self.handle_npc_interaction(self.TILE_NPC_2)
         self.handle_player_attack()
         self.check_interaction()
 
@@ -60,23 +65,22 @@ class Game:
         if not self.transitioning and self.player.rect.colliderect(self.transition_area):
             self.transition_to_second_map()
 
-    def handle_npc_interaction(self):
-        if self.map_tiles[int(self.player._y) // self.CHUNK_SIZE][int(self.player._x) // self.CHUNK_SIZE] == 20:
-            if not self.quest_handler.quest_active and not self.quest_handler.axe_head_returned:
-                self.quest_handler.start_quest()
-            elif self.quest_handler.quest_active and not self.quest_handler.axe_head_returned:
-                self.quest_handler.return_axe_head()
-            elif self.quest_handler.axe_head_returned and not self.quest_handler.stick_returned:
-                self.quest_handler.return_stick()
-
-    def handle_npc2_interaction(self):
-        if self.map_tiles[int(self.player._y) // self.CHUNK_SIZE][int(self.player._x) // self.CHUNK_SIZE] == 21:
-            if not self.quest_handler.healing_quest_active and not self.quest_handler.empty_vial_returned:
-                self.quest_handler.healing_quest_start()
-            elif self.quest_handler.healing_quest_active and not self.quest_handler.empty_vial_returned:
-                self.quest_handler.return_empty_vial()
-            elif self.quest_handler.healing_quest_active and not self.quest_handler.filled_vial_of_water:
-                self.quest_handler.vial_of_water_quest()
+    def handle_npc_interaction(self, tile_id):
+        if self.map_tiles[int(self.player._y) // self.CHUNK_SIZE][int(self.player._x) // self.CHUNK_SIZE] == tile_id:
+            if tile_id == self.TILE_NPC_1:
+                if not self.quest_handler.quest_active and not self.quest_handler.axe_head_returned:
+                    self.quest_handler.start_quest()
+                elif self.quest_handler.quest_active and not self.quest_handler.axe_head_returned:
+                    self.quest_handler.return_axe_head()
+                elif self.quest_handler.axe_head_returned and not self.quest_handler.stick_returned:
+                    self.quest_handler.return_stick()
+            elif tile_id == self.TILE_NPC_2:
+                if not self.quest_handler.healing_quest_active and not self.quest_handler.empty_vial_returned:
+                    self.quest_handler.healing_quest_start()
+                elif self.quest_handler.healing_quest_active and not self.quest_handler.empty_vial_returned:
+                    self.quest_handler.return_empty_vial()
+                elif self.quest_handler.healing_quest_active and not self.quest_handler.filled_vial_of_water:
+                    self.quest_handler.vial_of_water_quest()
 
     def handle_player_attack(self):
         # Check for collisions between player and enemies
@@ -88,6 +92,13 @@ class Game:
                     if not enemy.alive:
                         self.player.enemy_kill_count += 1
                         print(self.player.enemy_kill_count)
+                        self.respawn_enemy(enemy)
+
+    def respawn_enemy(self, enemy):
+        # Find the index of the dead enemy
+        index = self.enemies.index(enemy)
+        # Respawn the enemy at its initial position
+        self.enemies[index] = Enemy(enemy.initial_x, enemy.initial_y)
 
     def check_interaction(self):
         # Get the player's position in terms of chunks
@@ -104,11 +115,11 @@ class Game:
                 # Ensure chunk indices are within bounds of the map
                 if 0 <= chunk_x < len(self.map_tiles[0]) and 0 <= chunk_y < len(self.map_tiles):
                     # Handle well interaction
-                    if self.map_tiles[chunk_y][chunk_x] == 16:  # Well
+                    if self.map_tiles[chunk_y][chunk_x] == self.TILE_WELL:
                         self.handle_well_interaction()
                         return
                     # Handle tree interaction
-                    elif self.map_tiles[chunk_y][chunk_x] == 5:  # Tree
+                    elif self.map_tiles[chunk_y][chunk_x] == self.TILE_TREE:
                         self.handle_tree_interaction()
                         return
 

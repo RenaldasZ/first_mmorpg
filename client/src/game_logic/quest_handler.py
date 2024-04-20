@@ -95,11 +95,11 @@ class QuestHandler:
             self.axe_head_spawn_pos = None
             self.display_messages("handle_axe_pickup")
 
-        elif self.axe_head_spawn_pos:
+        if self.axe_head_spawn_pos:
             screen_pos = (self.axe_head_spawn_pos[0] - self.player._x + self.screen_size[0] // 2,
                           self.axe_head_spawn_pos[1] - self.player._y + self.screen_size[1] // 2)
             self.screen.blit(self.axe_head_image, screen_pos)
-            pygame.display.flip()
+            # pygame.display.flip()
 
     def complete_second_part_quest(self):
         if self.stick_returned:
@@ -123,7 +123,7 @@ class QuestHandler:
             screen_pos = (self.vial_spawn_pos[0] - self.player._x + self.screen_size[0] // 2,
                           self.vial_spawn_pos[1] - self.player._y + self.screen_size[1] // 2)
             self.screen.blit(self.vial_image, screen_pos)
-            pygame.display.flip()
+            # pygame.display.flip()
 
     def return_empty_vial(self):
         if "Empty vial" in self.player.inventory.items:

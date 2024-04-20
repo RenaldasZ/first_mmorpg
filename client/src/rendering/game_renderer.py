@@ -9,22 +9,62 @@ class GameRenderer:
     def __init__(self, game):
         self.game = game
         self.time_factor = 6
+        self.viewport_factor = 1
         self.last_update = datetime.now()
         self.enemy_image = pygame.image.load("assets/enemy/dog.png").convert_alpha()
-        self.viewport_factor = 1
+        self.item_icons = {
+            "Stick": pygame.image.load("assets/items/stick.png").convert_alpha(),
+            "Empty vial": pygame.image.load("assets/items/empty_vial.png").convert_alpha(),
+            "Vial of Water": pygame.image.load("assets/items/vial_of_water.png").convert_alpha(),
+            "Axe Head": pygame.image.load("assets/items/axe_head.png").convert_alpha(),
+        }
+        self.inventory_slot_size = 50
+        self.inventory_margin = 10
+        self.inventory_font = pygame.font.Font(None, 20)
 
     def render(self):
         self.game.screen.fill(WHITE)
         render_map(self.game)
         self.render_players()
-        self.render_inventory()
+        self.render_enemies()
         self.render_time()
         self.game.render_player_coords()
         self.game.render_player_health()
-        self.render_enemies()
+        self.render_inventory()
         self.render_enemy_health()
-        self.game.check_interaction()
+        self.handle_mouse_right_click()
         self.handle_quests()
+        self.game.check_interaction()
+
+    def handle_mouse_right_click(self):
+        if pygame.mouse.get_pressed()[2]:
+            mouse_pos = pygame.mouse.get_pos()
+            self.handle_mouse_hover(mouse_pos)
+
+    def handle_mouse_hover(self, mouse_pos):
+        # Convert mouse position to map coordinates
+        map_pos = self.game.screen_to_map(mouse_pos)
+        # Determine the object ID under the mouse cursor
+        object_id = self.get_object_id_at(map_pos)
+        # Display the object ID next to the mouse cursor
+        self.render_object_id(object_id, mouse_pos)
+
+    def get_object_id_at(self, map_pos):
+        # Calculate the tile or object ID at the given map position
+        chunk_x = int(map_pos[0] // self.game.CHUNK_SIZE)
+        chunk_y = int(map_pos[1] // self.game.CHUNK_SIZE)
+        if 0 <= chunk_x < len(self.game.map_tiles[0]) and 0 <= chunk_y < len(self.game.map_tiles):
+            return self.game.map_tiles[chunk_y][chunk_x]
+        return None
+
+    def render_object_id(self, object_id, mouse_pos):
+        if object_id is not None:
+            object_id_text = f"Object ID: {object_id}"
+            text_surface = self.game.font.render(object_id_text, True, (0, 0, 0))
+            text_rect = text_surface.get_rect()
+            text_rect.topleft = mouse_pos
+            self.game.screen.blit(text_surface, text_rect)
+            # pygame.display.flip()
 
     def render_enemies(self):
         player = self.game.player
@@ -45,23 +85,43 @@ class GameRenderer:
                     )
                     self.game.screen.blit(self.enemy_image, enemy_screen_pos)
 
-        pygame.display.flip()
-
     def render_players(self):
-        screen = self.game.screen
         player_manager = self.game.player_manager
         for player in player_manager.players:
             player_size = player._size
             player_render_x = self.game.screen_size[0] // 2 - player_size // 2
             player_render_y = self.game.screen_size[1] // 2 - player_size // 2
-            pygame.draw.rect(screen, (0, 0, 0), (player_render_x, player_render_y, player_size, player_size))
+            pygame.draw.rect(self.game.screen, (0, 0, 0), (player_render_x, player_render_y, player_size, player_size))
 
     def render_inventory(self):
         player_inventory = self.game.player.inventory
-        inventory_text = "Inventory: " + ", ".join(player_inventory.items)
-        text_surface = self.game.font.render(inventory_text, True, WHITE)
-        text_rect = text_surface.get_rect(bottomleft=(20, self.game.screen_size[1] - 20))
-        self.game.screen.blit(text_surface, text_rect)
+        inventory_rect = pygame.Rect(
+            self.inventory_margin, 
+            self.game.screen_size[1] - self.inventory_margin - self.inventory_slot_size,
+            (self.inventory_slot_size + self.inventory_margin) * len(player_inventory.items) + self.inventory_margin,
+            self.inventory_slot_size + self.inventory_margin * 2
+        )
+        pygame.draw.rect(self.game.screen, (0, 0, 0), inventory_rect, 2)
+
+        slot_x = self.inventory_margin * 2
+        slot_y = self.game.screen_size[1] - self.inventory_margin - self.inventory_slot_size + self.inventory_margin
+
+        for item_name in player_inventory.items:
+            item_icon = self.item_icons.get(item_name)
+            if item_icon:
+                # Resize the image to fit the inventory slot size
+                resized_icon = pygame.transform.scale(item_icon, (self.inventory_slot_size, self.inventory_slot_size))
+                item_rect = pygame.Rect(slot_x, slot_y, self.inventory_slot_size, self.inventory_slot_size)
+                self.game.screen.blit(resized_icon, item_rect)
+
+            # Render item name
+            item_name_text = self.inventory_font.render(item_name, True, (255, 255, 255))
+            item_name_rect = item_name_text.get_rect(
+                center=(slot_x + self.inventory_slot_size // 2, slot_y + self.inventory_slot_size + self.inventory_margin)
+            )
+            self.game.screen.blit(item_name_text, item_name_rect)
+
+            slot_x += self.inventory_slot_size + self.inventory_margin
 
     def render_time(self):
         current_time = self.calculate_time().strftime("%H:%M:%S")

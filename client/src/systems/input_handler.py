@@ -10,7 +10,7 @@ class InputHandler:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.handle_quit_event()
-            elif event.type == pygame.MOUSEBUTTONDOWN:
+            elif event.type == pygame.MOUSEBUTTONUP:
                 self.handle_mouse_click(pygame.mouse.get_pos())
             elif event.type == pygame.KEYDOWN:
                 self.handle_keydown_event(event)

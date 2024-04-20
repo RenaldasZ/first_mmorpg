@@ -3,6 +3,8 @@ import math
 
 class Enemy:
     def __init__(self, x, y, size=100, speed=2, max_health=100, attack_damage=0.1, attack_range=50):
+        self.initial_x = x
+        self.initial_y = y
         self._x = x
         self._y = y
         self.size = size

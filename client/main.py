@@ -20,7 +20,7 @@ def handle_menu_choice(menu, choice):
 def update_fps_text(font, clock, game):
     fps_text = font.render("FPS: " + str(int(clock.get_fps())), True, (0, 0, 0))
     text_rect = fps_text.get_rect()
-    text_rect.bottomleft = game.screen.get_rect().bottomleft
+    text_rect.bottomright = game.screen.get_rect().bottomright
     game.screen.blit(fps_text, text_rect)
 
 def run_game_loop(game, menu):
