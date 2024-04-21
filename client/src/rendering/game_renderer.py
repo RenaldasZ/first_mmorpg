@@ -17,6 +17,8 @@ class GameRenderer:
             "Empty vial": pygame.image.load("assets/items/empty_vial.png").convert_alpha(),
             "Vial of Water": pygame.image.load("assets/items/vial_of_water.png").convert_alpha(),
             "Axe Head": pygame.image.load("assets/items/axe_head.png").convert_alpha(),
+            "Cutting Axe": pygame.image.load("assets/items/cutting_axe.png").convert_alpha(),
+            "Gold Coin": pygame.image.load("assets/items/gold_coin.png").convert_alpha(),
         }
         self.inventory_slot_size = 50
         self.inventory_margin = 10
@@ -64,7 +66,6 @@ class GameRenderer:
             text_rect = text_surface.get_rect()
             text_rect.topleft = mouse_pos
             self.game.screen.blit(text_surface, text_rect)
-            # pygame.display.flip()
 
     def render_enemies(self):
         player = self.game.player
