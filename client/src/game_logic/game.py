@@ -53,6 +53,12 @@ class Game:
         self.enemy = new_enemy
         print(self.enemy.x, self.enemy.y, self.enemy.alive)
 
+    def spawn_enemies_second_map(self):
+        enemy_positions = [
+            (7000, 7000), (7200, 7200), (7400, 7400)
+        ]
+        self.enemies = [Enemy(x, y) for x, y in enemy_positions]
+
     def handle_events(self):
         self.input_handler.handle_events()
         self.check_transition_area_collision()
@@ -135,7 +141,8 @@ class Game:
                         
     def transition_to_second_map(self):
         if not self.transitioning:
-            self.load_map('maps/map2.json')
+            self.load_map('maps/map2.json') 
+            self.spawn_enemies_second_map()
             self.player.position = (9800, 9800)
             self.transitioning = True
             item = "Health Potion"

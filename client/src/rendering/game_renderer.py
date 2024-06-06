@@ -6,10 +6,10 @@ from datetime import datetime, timedelta
 WHITE = (255, 255, 255)
 
 class GameRenderer:
-    def __init__(self, game):
+    def __init__(self, game, viewport_factor=3):
         self.game = game
         self.time_factor = 6
-        self.viewport_factor = 1
+        self.viewport_factor = viewport_factor
         self.last_update = datetime.now()
         self.enemy_image = pygame.image.load("assets/enemy/dog.png").convert_alpha()
         self.item_icons = {
@@ -26,7 +26,7 @@ class GameRenderer:
 
     def render(self):
         self.game.screen.fill(WHITE)
-        render_map(self.game)
+        render_map(self.game, viewport_factor=self.viewport_factor)
         self.render_players()
         self.render_enemies()
         self.render_time()
@@ -37,6 +37,7 @@ class GameRenderer:
         self.handle_mouse_right_click()
         self.handle_quests()
         self.game.check_interaction()
+        self.render_kill_count()
 
     def handle_mouse_right_click(self):
         if pygame.mouse.get_pressed()[2]:
@@ -66,6 +67,13 @@ class GameRenderer:
             text_rect = text_surface.get_rect()
             text_rect.topleft = mouse_pos
             self.game.screen.blit(text_surface, text_rect)
+
+    def render_kill_count(self):
+        enemy_kill_count = self.game.player.enemy_kill_count 
+        kill_count_text = f"Enemies killed: {enemy_kill_count}"
+        text_surface = self.game.font.render(kill_count_text, True, (0, 0, 0))
+        text_rect = text_surface.get_rect(topleft=(500, 500))
+        self.game.screen.blit(text_surface, text_rect)
 
     def render_enemies(self):
         player = self.game.player

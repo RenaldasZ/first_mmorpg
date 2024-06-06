@@ -8,7 +8,7 @@ class QuestHandler:
         self.player = player
         self.item_handler = item_handler
         self.font = pygame.font.Font(None, 24)
-        self.message_window = pygame.Surface((screen_size[0] // 2, screen_size[1] // 8))  # Adjust size as needed
+        self.message_window = pygame.Surface((screen_size[0] // 2, screen_size[1] // 8))
         self.message_rect = self.message_window.get_rect(bottomleft=(screen_size[0] // 2 // 2, screen_size[1]))
         self.load_images()
 

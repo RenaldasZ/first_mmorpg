@@ -17,11 +17,11 @@ def handle_menu_choice(menu, choice):
     elif choice == "exit":
         exit_game()
 
-def update_fps_text(font, clock, game):
+def update_fps_text(font, clock, screen):
     fps_text = font.render("FPS: " + str(int(clock.get_fps())), True, (0, 0, 0))
     text_rect = fps_text.get_rect()
-    text_rect.bottomright = game.screen.get_rect().bottomright
-    game.screen.blit(fps_text, text_rect)
+    text_rect.bottomright = screen.get_rect().bottomright
+    screen.blit(fps_text, text_rect)
 
 def run_game_loop(game, menu):
     clock = pygame.time.Clock()
@@ -37,8 +37,10 @@ def run_game_loop(game, menu):
             game.update()
             game.render()
 
+        # Remove the frame rate cap
         clock.tick(60)
-        update_fps_text(font, clock, game)
+        
+        update_fps_text(font, clock, game.screen)
         pygame.display.flip()
 
 def menu_loop(menu):

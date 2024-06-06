@@ -42,7 +42,7 @@ def load_images():
             # Handle error gracefully, e.g., fallback to a default image
     return images
 
-def render_map(game, viewport_factor=8):
+def render_map(game, viewport_factor):
     """Render the game map."""
     screen = game.screen
     player = game.player
