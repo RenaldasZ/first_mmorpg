@@ -12,6 +12,7 @@ class GameRenderer:
         self.viewport_factor = viewport_factor
         self.last_update = datetime.now()
         self.enemy_image = pygame.image.load("assets/enemy/dog.png").convert_alpha()
+        self.question_mark_image = pygame.image.load("assets/question_mark.png").convert_alpha()
         self.item_icons = {
             "Stick": pygame.image.load("assets/items/stick.png").convert_alpha(),
             "Empty vial": pygame.image.load("assets/items/empty_vial.png").convert_alpha(),
@@ -36,8 +37,27 @@ class GameRenderer:
         self.render_enemy_health()
         self.handle_mouse_right_click()
         self.handle_quests()
+        self.render_npc_question_mark()
         self.game.check_interaction()
         self.render_kill_count()
+
+    def render_npc_question_mark(self):
+        player = self.game.player
+        screen_size = self.game.screen_size
+
+        # For the first NPC
+        npc1_x, npc1_y = self.game.NPC_POSITIONS[self.game.TILE_NPC_1]
+        if not self.game.quest_handler.axe_head_returned or not self.game.quest_handler.stick_returned:
+            screen_x = npc1_x - player._x + screen_size[0] // 2
+            screen_y = npc1_y - player._y + screen_size[1] // 2 - self.question_mark_image.get_height()
+            self.game.screen.blit(self.question_mark_image, (screen_x, screen_y))
+
+        # For the second NPC
+        npc2_x, npc2_y = self.game.NPC_POSITIONS[self.game.TILE_NPC_2]
+        if self.game.quest_handler.axe_head_returned and self.game.quest_handler.stick_returned:
+            screen_x = npc2_x - player._x + screen_size[0] // 2
+            screen_y = npc2_y - player._y + screen_size[1] // 2 - self.question_mark_image.get_height()
+            self.game.screen.blit(self.question_mark_image, (screen_x, screen_y))
 
     def handle_mouse_right_click(self):
         if pygame.mouse.get_pressed()[2]:

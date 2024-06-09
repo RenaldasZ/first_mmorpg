@@ -141,6 +141,7 @@ class QuestHandler:
         if "Vial of Water" in self.player.inventory.items:
             self.display_messages("vial_of_water_returned")
             self.healing_quest_active = False
+            self.filled_vial_of_water = True
         else:
             self.display_hint("Hint: Use the well to fill the vial with water.")
 

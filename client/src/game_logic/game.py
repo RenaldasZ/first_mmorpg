@@ -17,6 +17,12 @@ class Game:
     TILE_WELL = 16
     TILE_TREE = 5
 
+    # NPC positions (x, y) in the map
+    NPC_POSITIONS = {
+        TILE_NPC_1: (5280, 4850),
+        TILE_NPC_2: (5680, 3850),
+    }
+
     def __init__(self, screen_size, screen):
         # Initialize game components
         self.screen_size = screen_size
