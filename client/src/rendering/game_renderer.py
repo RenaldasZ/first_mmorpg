@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 WHITE = (255, 255, 255)
 
 class GameRenderer:
-    def __init__(self, game, viewport_factor=3):
+    def __init__(self, game, viewport_factor=4):
         self.game = game
         self.time_factor = 6
         self.viewport_factor = viewport_factor
@@ -120,7 +120,7 @@ class GameRenderer:
             player_size = player._size
             player_render_x = self.game.screen_size[0] // 2 - player_size // 2
             player_render_y = self.game.screen_size[1] // 2 - player_size // 2
-            pygame.draw.rect(self.game.screen, (0, 0, 0), (player_render_x, player_render_y, player_size, player_size))
+            self.game.screen.blit(player.image, (player_render_x, player_render_y))
 
     def render_inventory(self):
         player_inventory = self.game.player.inventory

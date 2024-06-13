@@ -5,17 +5,19 @@ from src.entities.player import Player
 from src.entities.enemy import Enemy
 from src.systems.input_handler import InputHandler
 from src.rendering.game_renderer import GameRenderer
+from src.rendering.map_renderer import TILE_NPC1, TILE_NPC2, TILE_WELL, TILE_TREE
 from src.game_logic.player_manager import PlayerManager
 from src.game_logic.quest_handler import QuestHandler
 from src.utils.item_handler import ItemHandler
 from src.utils.barrier import collides_with_barrier
+from src.utils.sprite_sheet import SpriteSheet
 import math
 
 class Game:
-    TILE_NPC_1 = 20
-    TILE_NPC_2 = 21
-    TILE_WELL = 16
-    TILE_TREE = 5
+    TILE_NPC_1 = TILE_NPC1
+    TILE_NPC_2 = TILE_NPC2
+    TILE_WELL = TILE_WELL
+    TILE_TREE = TILE_TREE
 
     # NPC positions (x, y) in the map
     NPC_POSITIONS = {
@@ -33,7 +35,11 @@ class Game:
         self.target_pos = None
         self.transition_area = pygame.Rect(9800, 200, 200, 200)
         self.transitioning = False
-        self.player = Player(100)
+
+        # Initialize and use the SpriteSheet class
+        self.sprite_sheet = SpriteSheet()
+        self.player = Player(self.sprite_sheet)
+
         self.player_manager = PlayerManager(self)
         self.player_manager.add_player(self.player)
         self.input_handler = InputHandler(self)
