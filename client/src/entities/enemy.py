@@ -32,41 +32,48 @@ class Enemy:
         self._y = value
 
     def get_health_percentage(self):
+        """Returns the current health as a percentage of the max health."""
         return (self.health / self.max_health) * 100
 
     def update(self, player):
+        """Updates the enemy's state, including movement towards the player if within chase distance."""
         if not self.alive:
             return
 
-        # Constants
-        CHASE_DISTANCE = 500
+        CHASE_DISTANCE = 500  # Distance within which the enemy will chase the player
 
-        # Calculate distance to the player
-        distance_to_player = math.sqrt((self.x - player._x) ** 2 + (self.y - player._y) ** 2)
+        distance_to_player = self._calculate_distance(player._x, player._y)
 
-        # If the player is within a certain distance, chase
         if distance_to_player < CHASE_DISTANCE:
-            dx = player._x - self.x
-            dy = player._y - self.y
-            direction = math.atan2(dy, dx)
-
-            # Move towards the player
-            self.x += self.speed * math.cos(direction)
-            self.y += self.speed * math.sin(direction)
+            self._move_towards(player._x, player._y)
 
     def attack_player(self, player):
-        # Calculate distance to the player
-        distance_to_player = math.sqrt((self.x - player._x) ** 2 + (self.y - player._y) ** 2)
-
-        # Check if the player is within attack range
-        if distance_to_player < self.attack_range:
-            # Perform the attack on the player
+        """Attacks the player if within attack range."""
+        if self._is_within_range(player._x, player._y, self.attack_range):
             player.take_damage(self.attack_damage)
 
     def take_damage(self, damage):
+        """Reduces the enemy's health and destroys the enemy if health falls to zero or below."""
         self.health -= damage
         if self.health <= 0:
             self.destroy()
 
     def destroy(self):
+        """Marks the enemy as dead."""
         self.alive = False
+
+    def _calculate_distance(self, target_x, target_y):
+        """Calculates the distance to a target point."""
+        return math.sqrt((self.x - target_x) ** 2 + (self.y - target_y) ** 2)
+
+    def _move_towards(self, target_x, target_y):
+        """Moves the enemy towards the target coordinates."""
+        dx = target_x - self.x
+        dy = target_y - self.y
+        direction = math.atan2(dy, dx)
+        self.x += self.speed * math.cos(direction)
+        self.y += self.speed * math.sin(direction)
+
+    def _is_within_range(self, target_x, target_y, range):
+        """Checks if a target is within a given range."""
+        return self._calculate_distance(target_x, target_y) < range
