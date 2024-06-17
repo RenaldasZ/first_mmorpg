@@ -2,6 +2,7 @@
 import pygame
 from src.rendering.map_renderer import render_map
 from datetime import datetime, timedelta
+from src.entities.npc import NPC
 
 WHITE = (255, 255, 255)
 
@@ -46,14 +47,14 @@ class GameRenderer:
         screen_size = self.game.screen_size
 
         # For the first NPC
-        npc1_x, npc1_y = self.game.NPC_POSITIONS[self.game.TILE_NPC_1]
+        npc1_x, npc1_y = self.game.NPC_POSITIONS[NPC.TILE_NPC_1]
         if not self.game.quest_handler.axe_head_returned or not self.game.quest_handler.stick_returned:
             screen_x = npc1_x - player._x + screen_size[0] // 2
             screen_y = npc1_y - player._y + screen_size[1] // 2 - self.question_mark_image.get_height()
             self.game.screen.blit(self.question_mark_image, (screen_x, screen_y))
 
         # For the second NPC
-        npc2_x, npc2_y = self.game.NPC_POSITIONS[self.game.TILE_NPC_2]
+        npc2_x, npc2_y = self.game.NPC_POSITIONS[NPC.TILE_NPC_2]
         if self.game.quest_handler.axe_head_returned and self.game.quest_handler.stick_returned:
             screen_x = npc2_x - player._x + screen_size[0] // 2
             screen_y = npc2_y - player._y + screen_size[1] // 2 - self.question_mark_image.get_height()

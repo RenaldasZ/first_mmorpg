@@ -1,28 +1,27 @@
 # src/game_logic/game.py
 import pygame
 import json
+import math
 from src.entities.player import Player
 from src.entities.enemy import Enemy
+from src.entities.npc import NPC  # Assuming NPC is defined in npc.py
 from src.systems.input_handler import InputHandler
 from src.rendering.game_renderer import GameRenderer
-from src.rendering.map_renderer import TILE_NPC1, TILE_NPC2, TILE_WELL, TILE_TREE
+from src.rendering.map_renderer import TILE_WELL, TILE_TREE
 from src.game_logic.player_manager import PlayerManager
 from src.game_logic.quest_handler import QuestHandler
 from src.utils.item_handler import ItemHandler
 from src.utils.barrier import collides_with_barrier
 from src.utils.sprite_sheet import SpriteSheet
-import math
 
 class Game:
-    TILE_NPC_1 = TILE_NPC1
-    TILE_NPC_2 = TILE_NPC2
     TILE_WELL = TILE_WELL
     TILE_TREE = TILE_TREE
 
     # NPC positions (x, y) in the map
     NPC_POSITIONS = {
-        TILE_NPC_1: (5280, 4850),
-        TILE_NPC_2: (5680, 3850),
+        NPC.TILE_NPC_1: (5280, 4850),
+        NPC.TILE_NPC_2: (5680, 3850),
     }
 
     def __init__(self, screen_size, screen):
@@ -74,8 +73,8 @@ class Game:
     def handle_events(self):
         self.input_handler.handle_events()
         self.check_transition_area_collision()
-        self.handle_npc_interaction(self.TILE_NPC_1)
-        self.handle_npc_interaction(self.TILE_NPC_2)
+        self.handle_npc_interaction(NPC.TILE_NPC_1)
+        self.handle_npc_interaction(NPC.TILE_NPC_2)
         self.handle_player_attack()
         self.check_interaction()
 
@@ -85,20 +84,7 @@ class Game:
 
     def handle_npc_interaction(self, tile_id):
         if self.map_tiles[int(self.player._y) // self.CHUNK_SIZE][int(self.player._x) // self.CHUNK_SIZE] == tile_id:
-            if tile_id == self.TILE_NPC_1:
-                if not self.quest_handler.quest_active and not self.quest_handler.axe_head_returned:
-                    self.quest_handler.start_quest()
-                elif self.quest_handler.quest_active and not self.quest_handler.axe_head_returned:
-                    self.quest_handler.return_axe_head()
-                elif self.quest_handler.axe_head_returned and not self.quest_handler.stick_returned:
-                    self.quest_handler.return_stick()
-            elif tile_id == self.TILE_NPC_2:
-                if not self.quest_handler.healing_quest_active and not self.quest_handler.empty_vial_returned:
-                    self.quest_handler.healing_quest_start()
-                elif self.quest_handler.healing_quest_active and not self.quest_handler.empty_vial_returned:
-                    self.quest_handler.return_empty_vial()
-                elif self.quest_handler.healing_quest_active and not self.quest_handler.filled_vial_of_water:
-                    self.quest_handler.vial_of_water_quest()
+            self.npc.handle_interaction(self.player, tile_id)
 
     def handle_player_attack(self):
         # Check for collisions between player and enemies
