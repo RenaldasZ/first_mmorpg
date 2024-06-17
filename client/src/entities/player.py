@@ -1,4 +1,3 @@
-# src/entities/player.py
 import pygame
 from src.utils.stack import Stack
 import math
@@ -26,40 +25,44 @@ class Player:
         self.update_time = pygame.time.get_ticks()
 
     def load_animation(self):
-        animation_list = []
-        animation_steps = [7, 6] # number of frames for each animation (idle, walk)
-        for y, animation in enumerate(animation_steps):
-            temp_img_list = []
-            for x in range(animation):
-                temp_img_list.append(self.sprite_sheet.get_image(x, y, 100, 100, 1, (0, 0, 0)))
-            animation_list.append(temp_img_list)
-        return animation_list
+        """
+        Loads the animation frames from the sprite sheet.
+        """
+        try:
+            FRAME_WIDTH = 100
+            FRAME_HEIGHT = 100
+            SCALE = 1
+
+            # Number of frames for each animation (idle, walk)
+            animation_steps = [7, 6]
+
+            # Create the animation list using list comprehensions
+            animation_list = [
+                [self.sprite_sheet.get_image(x, y, FRAME_WIDTH, FRAME_HEIGHT, SCALE) for x in range(steps)]
+                for y, steps in enumerate(animation_steps)
+            ]
+            return animation_list
+        except Exception as e:
+            print(f"Error loading animations: {e}")
+            return []
 
     def update_animation(self):
-        # Define the cooldown time
+        """
+        Updates the current frame of the animation based on the cooldown time.
+        """
         ANIMATION_COOLDOWN = 100  # milliseconds
-
-        # Get the current time
         current_time = pygame.time.get_ticks()
 
-        # Check if it's time to update the animation
         if current_time - self.update_time > ANIMATION_COOLDOWN:
-            # Update the update_time to the current time
             self.update_time = current_time
+            self.frame_index = (self.frame_index + 1) % len(self.animation_list[self.action])
+            self.image = self.animation_list[self.action][self.frame_index]
+            print(f"action {self.action} frame_index {self.frame_index}")
 
-            # Move to the next frame
-            self.frame_index += 1
-
-            # Check if we've reached the end of the animation
-            if self.frame_index >= len(self.animation_list[self.action]):
-                # If so, reset the frame index to loop the animation
-                self.frame_index = 0
-
-        # Update the current image to the current frame
-        self.image = self.animation_list[self.action][self.frame_index]
-        print(f"action {self.action} frame_index {self.frame_index}")
-            
     def update_action(self, new_action):
+        """
+        Updates the current action of the player.
+        """
         if new_action != self.action:
             self.action = new_action
             self.frame_index = 0
@@ -81,24 +84,25 @@ class Player:
         return self.inventory.pop()
 
     def remove_item_from_inventory(self, item):
-        # Remove specified item from the inventory
         if item in self.inventory.items:
             self.inventory.items.remove(item)
 
     def take_damage(self, damage):
-        # Reduce player's health when taking damage
-        self.health -= damage
-        self.health = max(0, self.health)
+        self.health = max(0, self.health - damage)
 
     def heal(self, amount):
-        # Increase player's health when healing
-        self.health += amount
-        self.health = min(MAX_PLAYER_HEALTH, self.health)
+        self.health = min(MAX_PLAYER_HEALTH, self.health + amount)
             
     def attack(self, enemy):
-        # Calculate distance to the enemy
-        distance_to_enemy = math.sqrt((self._x - enemy._x) ** 2 + (self._y - enemy._y) ** 2)
-        
-        # Check if the enemy is within attack range
-        if distance_to_enemy < self.attack_range:
+        """
+        Attacks an enemy if within range.
+        """
+        if self._is_enemy_within_range(enemy):
             enemy.take_damage(self.attack_damage)
+
+    def _is_enemy_within_range(self, enemy):
+        """
+        Helper function to check if the enemy is within attack range.
+        """
+        distance_to_enemy = math.hypot(self._x - enemy._x, self._y - enemy._y)
+        return distance_to_enemy < self.attack_range
