@@ -52,6 +52,7 @@ class Game:
         self.transition_manager = TransitionManager(self)
         self.interaction_manager = InteractionManager(self)
         self.player_renderer = PlayerRenderer(self)
+        self.npc = NPC(self.quest_handler)
         self.enemies = []
         self.enemy = None
 
@@ -73,7 +74,10 @@ class Game:
 
     def handle_npc_interaction(self, tile_id):
         if self.map_tiles[int(self.player._y) // self.CHUNK_SIZE][int(self.player._x) // self.CHUNK_SIZE] == tile_id:
-            self.npc.handle_interaction(self.player, tile_id)
+            if tile_id == NPC.TILE_NPC_1:
+                self.npc.handle_interaction(self.player, tile_id)
+            elif tile_id == NPC.TILE_NPC_2:
+                self.npc.handle_interaction(self.player, tile_id)
 
     def handle_player_attack(self):
         # Check for collisions between player and enemies
