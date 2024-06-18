@@ -1,4 +1,4 @@
-# src/game_logic/input_handler.py
+# src/systems/input_handler.py
 import pygame
 from ui.exit_button_renderer import is_exit_button_clicked
 

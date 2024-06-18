@@ -1,4 +1,4 @@
-# barrier.py
+# src/utils/barrier.py
 def collides_with_barrier(pos, map_tiles, CHUNK_SIZE):
     tile_x = int(pos.x // CHUNK_SIZE)
     tile_y = int(pos.y // CHUNK_SIZE)

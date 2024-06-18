@@ -36,33 +36,51 @@
 
 **Main Files:**
 
-`main.py`: Entry point of the game.
+## Main Files:
 
-`map_editor.py`: For editing maps. Useful during development.
+- `main.py`: Entry point of the game.
+- `map_editor.py`: Module for editing maps, useful during development.
 
-**Assets:**
+## Assets:
 
-`assets`/: Directory for storing game assets like images, sounds, etc.
+assets/: Directory for storing game assets like images, sounds, etc.
 
-`maps`/: Directory for storing game maps.
+maps/: Directory for storing game maps.
 
-**UI:**
+## UI:
 
-`menu.py`: Module for handling in-game menus.
+- `menu.py`: Module for handling in-game menus.
+- `button.py`: Module for creating UI buttons.
 
-`button.py`: Module for creating UI buttons.
+## Source Code:
 
-**Source Code:**
+Entities/:
 
-`Entities`: Contains classes for game entities like players and enemies.
+- `enemy.py`: Class definitions for enemies.
+- `npc.py`: Class definitions for non-player characters.
+- `player.py`: Class definitions for players.
 
-`Game Logic`: Modules responsible for the core game logic, including game setup, player management, quest handling, and barrier collision detection.
+Game Logic/:
 
-`Systems`: Modules for handling input from players.
+- `game.py`: Main game class handling game setup, map loading, player interaction, and enemy spawning.
+- `interaction_manager.py`: Manages interactions between game entities and objects.
+- `player_manager.py`: Manages player-related logic such as movement, rendering player coordinates and health, and handling player input.
+- `quest_handler.py`: Handles quests and quest-related logic for the player.
+- `spawn_manager.py`: Manages spawning of enemies and other entities.
+- `transition_manager.py`: Manages transitions between game states or maps.
 
-`Rendering`: Modules related to rendering the game world.
+Rendering/:
 
-`Utils`: Utility modules containing helper functions and classes.
+- `game_renderer.py`: Renders the game world, including players, enemies, NPCs, and objects.
+- `map_renderer.py`: Renders the map tiles and objects.
+- `player_renderer.py`: Handles rendering specific to player-related UI elements.
+
+Utils/:
+
+- `barrier.py`: Contains functions for detecting collisions with barriers in the game world.
+- `item_handler.py`: Manages items within the game, including inventory and item interactions.
+- `sprite_sheet.py`: Utility for handling sprite sheets and extracting individual sprites.
+- `stack.py`: Implements a stack data structure, potentially used for game mechanics or data handling.
 
 ## How to Contribute:
 

@@ -1,5 +1,4 @@
 # src/game_logic/interaction_manager.py
-
 class InteractionManager:
     def __init__(self, game):
         self.game = game

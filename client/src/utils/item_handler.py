@@ -1,4 +1,4 @@
-# item_handler.py
+# src/utils/item_handler.py
 class ItemHandler:
     """Handles the logic for picking up items during quests."""
     
