@@ -1,4 +1,4 @@
-# exit_button_renderer.py
+# ui/exit_button_renderer.py
 def is_exit_button_clicked(mouse_pos, font, screen_size):
     # Define the exit button's position and dimensions
     exit_text_surface = font.render("Exit Game", True, (0, 0, 0))

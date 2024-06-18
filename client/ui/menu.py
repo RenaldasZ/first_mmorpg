@@ -1,3 +1,4 @@
+# ui/main.py
 import pygame
 from ui.button import Button
 

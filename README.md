@@ -51,6 +51,7 @@ maps/: Directory for storing game maps.
 
 - `menu.py`: Module for handling in-game menus.
 - `button.py`: Module for creating UI buttons.
+- `exit_button_renderer.py`: Renderer module specifically for exit buttons.
 
 ## Source Code:
 
