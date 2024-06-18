@@ -1,3 +1,4 @@
+# src/entities/player.py
 import pygame
 from src.utils.stack import Stack
 import math

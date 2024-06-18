@@ -32,14 +32,14 @@ class GameRenderer:
         self.render_players()
         self.render_enemies()
         self.render_time()
-        self.game.render_player_coords()
-        self.game.render_player_health()
+        self.game.player_renderer.render_player_coords()
+        self.game.player_renderer.render_player_health()
         self.render_inventory()
         self.render_enemy_health()
         self.handle_mouse_right_click()
         self.handle_quests()
         self.render_npc_question_mark()
-        self.game.check_interaction()
+        self.game.interaction_manager.check_interaction()
         self.render_kill_count()
 
     def render_npc_question_mark(self):
