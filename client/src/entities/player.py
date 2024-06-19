@@ -1,4 +1,3 @@
-# src/entities/player.py
 import pygame
 from src.utils.stack import Stack
 import math
@@ -8,7 +7,21 @@ INITIAL_PLAYER_POSITION = (10000 / 2, 10000 / 2)
 MAX_PLAYER_HEALTH = 100
 
 class Player:
+    """
+    Represents the player in the game, handling position, health, inventory, and animations.
+    """
+    
     def __init__(self, sprite_sheet, size=DEFAULT_PLAYER_SIZE, attack_damage=1, attack_range=100, enemy_kill_count=0):
+        """
+        Initialize the Player instance.
+
+        Args:
+            sprite_sheet (SpriteSheet): The sprite sheet containing player animations.
+            size (int): The size of the player sprite.
+            attack_damage (int): The damage dealt by the player in an attack.
+            attack_range (int): The range within which the player can attack enemies.
+            enemy_kill_count (int): The initial count of enemies killed by the player.
+        """
         self._size = size
         self._x, self._y = INITIAL_PLAYER_POSITION
         self.rect = pygame.Rect(self._x, self._y, size, size)
@@ -27,7 +40,10 @@ class Player:
 
     def load_animation(self):
         """
-        Loads the animation frames from the sprite sheet.
+        Load the animation frames from the sprite sheet.
+
+        Returns:
+            list: A list of animation frames for different actions.
         """
         try:
             FRAME_WIDTH = 100
@@ -49,7 +65,7 @@ class Player:
 
     def update_animation(self):
         """
-        Updates the current frame of the animation based on the cooldown time.
+        Update the current frame of the animation based on the cooldown time.
         """
         ANIMATION_COOLDOWN = 100  # milliseconds
         current_time = pygame.time.get_ticks()
@@ -62,7 +78,10 @@ class Player:
 
     def update_action(self, new_action):
         """
-        Updates the current action of the player.
+        Update the current action of the player.
+
+        Args:
+            new_action (int): The new action to be set (0: idle, 1: walk).
         """
         if new_action != self.action:
             self.action = new_action
@@ -71,39 +90,90 @@ class Player:
 
     @property
     def position(self):
+        """
+        Get the current position of the player.
+
+        Returns:
+            tuple: The current position (x, y).
+        """
         return self._x, self._y
 
     @position.setter
     def position(self, new_position):
+        """
+        Set the new position of the player.
+
+        Args:
+            new_position (tuple): The new position (x, y).
+        """
         self._x, self._y = new_position
         self.rect.topleft = new_position
 
     def add_to_inventory(self, item):
+        """
+        Add an item to the player's inventory.
+
+        Args:
+            item: The item to be added to the inventory.
+        """
         self.inventory.push(item)
 
     def remove_from_inventory(self):
+        """
+        Remove the top item from the player's inventory.
+
+        Returns:
+            The removed item.
+        """
         return self.inventory.pop()
 
     def remove_item_from_inventory(self, item):
+        """
+        Remove a specific item from the player's inventory.
+
+        Args:
+            item: The item to be removed from the inventory.
+        """
         if item in self.inventory.items:
             self.inventory.items.remove(item)
 
     def take_damage(self, damage):
+        """
+        Reduce the player's health by a specified damage amount.
+
+        Args:
+            damage (int): The amount of damage to be taken.
+        """
         self.health = max(0, self.health - damage)
 
     def heal(self, amount):
+        """
+        Heal the player by a specified amount.
+
+        Args:
+            amount (int): The amount of health to be restored.
+        """
         self.health = min(MAX_PLAYER_HEALTH, self.health + amount)
             
     def attack(self, enemy):
         """
-        Attacks an enemy if within range.
+        Attack an enemy if it is within range.
+
+        Args:
+            enemy: The enemy to be attacked.
         """
         if self._is_enemy_within_range(enemy):
             enemy.take_damage(self.attack_damage)
 
     def _is_enemy_within_range(self, enemy):
         """
-        Helper function to check if the enemy is within attack range.
+        Check if the enemy is within the player's attack range.
+
+        Args:
+            enemy: The enemy to be checked.
+
+        Returns:
+            bool: True if the enemy is within range, False otherwise.
         """
         distance_to_enemy = math.hypot(self._x - enemy._x, self._y - enemy._y)
         return distance_to_enemy < self.attack_range
