@@ -34,23 +34,22 @@ class InteractionManager:
         Checks for player interactions with nearby objects such as wells or trees.
         """
         # Get the player's position in terms of chunks
-        player_x_chunk = int((self.game.player._x + self.game.player._size / 2) // self.game.CHUNK_SIZE)
-        player_y_chunk = int((self.game.player._y + self.game.player._size / 2) // self.game.CHUNK_SIZE)
+        player_x_chunk = int(self.game.player._x + self.game.player._size // 2) // self.game.CHUNK_SIZE
+        player_y_chunk = int(self.game.player._y + self.game.player._size // 2) // self.game.CHUNK_SIZE
 
         # Define the range of chunks to check around the player
-        chunk_range = range(player_x_chunk - 1, player_x_chunk + 1)
-        chunk_range_y = range(player_y_chunk - 1, player_y_chunk + 1)
+        chunk_range = range(player_x_chunk - 1, player_x_chunk + 2)
+        chunk_range_y = range(player_y_chunk - 1, player_y_chunk + 2)
 
         # Iterate over the surrounding chunks to check for interactions
         for chunk_x in chunk_range:
             for chunk_y in chunk_range_y:
                 # Ensure chunk indices are within bounds of the map
                 if 0 <= chunk_x < len(self.game.map_tiles[0]) and 0 <= chunk_y < len(self.game.map_tiles):
-                    # Handle well interaction
-                    if self.game.map_tiles[chunk_y][chunk_x] == self.game.TILE_WELL:
+                    tile = self.game.map_tiles[chunk_y][chunk_x]
+                    if tile == self.game.TILE_WELL:
                         self.handle_well_interaction()
                         return
-                    # Handle tree interaction
-                    elif self.game.map_tiles[chunk_y][chunk_x] == self.game.TILE_TREE:
+                    elif tile == self.game.TILE_TREE:
                         self.handle_tree_interaction()
                         return

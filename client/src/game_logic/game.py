@@ -117,6 +117,11 @@ class Game:
         index = self.enemies.index(enemy)
         self.enemies[index] = Enemy(enemy.initial_x, enemy.initial_y)
 
+    def spawn_enemy(self, x, y):
+        """Spawns a new enemy at the specified coordinates."""
+        new_enemy = Enemy(x, y)
+        self.enemies.append(new_enemy)
+
     def handle_mouse_click(self, mouse_pos):
         """
         Handle mouse click events and set the target position for the player.
