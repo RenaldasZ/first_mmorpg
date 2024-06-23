@@ -35,7 +35,7 @@ class Player:
         self.sprite_sheet = sprite_sheet
         self.animation_list = self.load_animation()
         self.frame_index = 0
-        self.action = 0 # 0: idle, 1: walk
+        self.action = 0  # 0: idle, 1: walk, 2: jump, 3: attack_1, 4: attack_2, 5: get_hit, 6: die
         self.image = self.animation_list[self.action][self.frame_index]
         self.update_time = pygame.time.get_ticks()
 
@@ -51,8 +51,8 @@ class Player:
             FRAME_HEIGHT = 100
             SCALE = 1
 
-            # Number of frames for each animation (idle, walk)
-            animation_steps = [7, 6]
+            # Number of frames for each animation (idle, walk, jump, attack_1, attack_2, get_hit, die)
+            animation_steps = [7, 6, 0, 0, 0, 4, 10]
 
             # Create the animation list using list comprehensions
             animation_list = [
@@ -82,7 +82,7 @@ class Player:
         Update the current action of the player.
 
         Args:
-            new_action (int): The new action to be set (0: idle, 1: walk).
+            new_action (int): The new action to be set (0: idle, 1: walk, 2: jump, 3: attack_1, 4: attack_2, 5: get_hit, 6: die).
         """
         if new_action != self.action:
             self.action = new_action
@@ -140,12 +140,17 @@ class Player:
 
     def take_damage(self, damage):
         """
-        Reduce the player's health by a specified damage amount.
+        Reduce the player's health by a specified damage amount and update action to get_hit.
 
         Args:
             damage (int): The amount of damage to be taken.
         """
         self.health = max(0, self.health - damage)
+        self.update_action(5)  # Change action to get_hit
+        if self.health == 0:
+            self.update_action(6)  # Change action to die
+            # Handle player death if needed
+            pass
 
     def heal(self, amount):
         """
@@ -155,7 +160,7 @@ class Player:
             amount (int): The amount of health to be restored.
         """
         self.health = min(MAX_PLAYER_HEALTH, self.health + amount)
-            
+
     def attack(self, enemy):
         """
         Attack an enemy if it is within range.

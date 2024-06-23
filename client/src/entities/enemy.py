@@ -9,8 +9,8 @@ class Enemy:
     """
 
     CHASE_DISTANCE = 200  # Distance within which the enemy will chase the player
-    MIN_COOLDOWN = 0.5    # Minimum cooldown time between attacks
-    MAX_COOLDOWN = 2.0    # Maximum cooldown time between attacks
+    MIN_COOLDOWN = 2.0    # Minimum cooldown time between attacks
+    MAX_COOLDOWN = 7.0    # Maximum cooldown time between attacks
 
     def __init__(self, x, y, size=100, speed=2, max_health=100, attack_damage=1, attack_range=50):
         """
