@@ -108,6 +108,9 @@ class QuestHandler:
             self.quest_active = False
             self.player.remove_item_from_inventory("Stick")
 
+    def first_quest_completed(self):
+        return self.axe_head_returned and self.stick_returned
+
     def healing_quest_start(self):
         if self.stick_returned:
             self.display_messages("healing_quest_start")        
@@ -144,6 +147,9 @@ class QuestHandler:
             self.filled_vial_of_water = True
         else:
             self.display_hint("Hint: Use the well to fill the vial with water.")
+
+    def second_quest_completed(self):
+        return self.empty_vial_returned and self.filled_vial_of_water
 
     def display_messages(self, message_type):
         for message in self.quest_messages.get(message_type, []):
