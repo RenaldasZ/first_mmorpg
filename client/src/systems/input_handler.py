@@ -41,5 +41,5 @@ class InputHandler:
             self.game.player.select_skill(1)  # Select second skill
 
     def handle_e_key_press(self):
-        # Handle 'e' key press by spawning an enemy
+        """Handle the 'e' key press event to spawn an enemy at the player's location."""
         self.game.spawn_enemy(self.game.player._x, self.game.player._y)

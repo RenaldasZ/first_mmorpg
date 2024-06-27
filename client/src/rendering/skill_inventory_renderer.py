@@ -8,7 +8,7 @@ class SkillInventoryRenderer:
         self.font = font
 
     def render(self):
-        x, y = 10, 10
+        x, y = 200, 200
         skill_size = 50
         for i, skill in enumerate(self.player.skills):
             rect = pygame.Rect(x + i * (skill_size + 10), y, skill_size, skill_size)
@@ -18,6 +18,6 @@ class SkillInventoryRenderer:
                 pygame.draw.rect(self.screen, (255, 0, 0), rect, 2)
 
     def get_skill_rects(self):
-        x, y = 10, 10
+        x, y = 200, 200
         skill_size = 50
         return [pygame.Rect(x + i * (skill_size + 10), y, skill_size, skill_size) for i in range(len(self.player.skills))]

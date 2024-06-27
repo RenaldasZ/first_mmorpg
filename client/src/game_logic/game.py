@@ -20,7 +20,7 @@ from src.entities.skill import Skill
 
 class Game:
     """Main game class responsible for initializing and managing the game state, including player, NPCs, enemies, and game events."""
-    
+
     TILE_WELL = TILE_WELL
     TILE_TREE = TILE_TREE
 
@@ -47,7 +47,6 @@ class Game:
         self.transition_area = pygame.Rect(9800, 200, 200, 200)
         self.transitioning = False
 
-        # Initialize and use the SpriteSheet class
         self.sprite_sheet = SpriteSheet()
         self.player = Player(self.sprite_sheet)
 
@@ -65,7 +64,6 @@ class Game:
         self.enemies = []
         self.enemy = None
 
-        # Use transition_manager to load the initial map
         self.transition_manager.load_map('maps/map.json')
         self.spawn_manager.spawn_enemies()
 
@@ -86,7 +84,6 @@ class Game:
         self.check_transition_area_collision()
         self.handle_npc_interaction(NPC.TILE_NPC_1)
         self.handle_npc_interaction(NPC.TILE_NPC_2)
-        # self.handle_player_attack()
         self.interaction_manager.check_interaction()
 
     def check_transition_area_collision(self):
@@ -108,46 +105,45 @@ class Game:
                 self.npc.handle_interaction(self.player, tile_id)
 
     def enemy_within_range(self, player_x, player_y, attack_range):
+        """
+        Check if there is an enemy within the player's attack range.
+
+        Args:
+            player_x (float): The x-coordinate of the player.
+            player_y (float): The y-coordinate of the player.
+            attack_range (float): The attack range of the player.
+
+        Returns:
+            Enemy: The nearest enemy within range if found, else None.
+        """
         for enemy in self.enemies:
             if enemy.alive and self.player._is_enemy_within_range(enemy):
                 return enemy
         return None
 
-    # def handle_player_attack(self):
-    #     """Handle player's attacks on enemies and update enemy states accordingly."""
-    #     for enemy in self.enemies:
-    #         if enemy.alive:
-    #             distance_to_enemy = math.sqrt((self.player._x - enemy.x) ** 2 + (self.player._y - enemy.y) ** 2)
-    #             if distance_to_enemy < self.player.attack_range:
-    #                 enemy.take_damage(self.player.attack_damage)
-    #                 if not enemy.alive:
-    #                     self.player.enemy_kill_count += 1
-    #                     print(self.player.enemy_kill_count)
-    #                     self.respawn_enemy(enemy)
-
-    # def respawn_enemy(self, enemy):
-    #     """
-    #     Respawn a dead enemy at its initial position.
-
-    #     Args:
-    #         enemy (Enemy): The enemy to respawn.
-    #     """
-    #     index = self.enemies.index(enemy)
-    #     self.enemies[index] = Enemy(enemy.initial_x, enemy.initial_y)
-
     def spawn_enemy(self, x, y):
-        """Spawns a new enemy at the specified coordinates."""
-        new_enemy = Enemy(x, y)
+        """
+        Spawn a new enemy at the specified coordinates.
+
+        Args:
+            x (float): The x-coordinate to spawn the enemy.
+            y (float): The y-coordinate to spawn the enemy.
+        """
+        new_enemy = Enemy(x, y, self)
         self.enemies.append(new_enemy)
 
     def handle_mouse_click(self, mouse_pos):
-        # Handle skill selection
+        """
+        Handle mouse click events, including skill selection and target position setting.
+
+        Args:
+            mouse_pos (tuple): The position of the mouse click (x, y).
+        """
         skill_rects = self.skill_inventory_renderer.get_skill_rects()
         for i, rect in enumerate(skill_rects):
             if rect.collidepoint(mouse_pos):
                 self.player.select_skill(i)
                 return
-        # Handle other mouse click events
         self.target_pos = self.screen_to_map(mouse_pos)
 
     def screen_to_map(self, screen_pos):
@@ -172,6 +168,8 @@ class Game:
             if enemy.alive:
                 enemy.update(self.player)
                 enemy.attack_player(self.player)
+            else:
+                enemy.update(self.player)
 
     def render(self):
         """Render the game state on the screen."""
@@ -179,6 +177,7 @@ class Game:
         self.player_renderer.render_player_coords()
         self.player_renderer.render_player_health()
         self.skill_inventory_renderer.render()
+        self.renderer.render_kill_count()
 
     def get_player_chunk(self):
         """

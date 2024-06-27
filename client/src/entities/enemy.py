@@ -11,8 +11,10 @@ class Enemy:
     CHASE_DISTANCE = 200  # Distance within which the enemy will chase the player
     MIN_COOLDOWN = 2.0    # Minimum cooldown time between attacks
     MAX_COOLDOWN = 7.0    # Maximum cooldown time between attacks
+    MIN_RESPAWN_TIME = 5  # Minimum respawn time in seconds
+    MAX_RESPAWN_TIME = 10 # Maximum respawn time in seconds
 
-    def __init__(self, x, y, size=100, speed=2, max_health=100, attack_damage=1, attack_range=50):
+    def __init__(self, x, y, game, size=100, speed=2, max_health=100, attack_damage=1, attack_range=50):
         """
         Initialize the Enemy instance.
 
@@ -38,6 +40,9 @@ class Enemy:
         self.attack_range = attack_range
         self.last_attack_time = 0
         self.attack_cooldown = self._random_cooldown()
+        self.respawn_time = self._random_respawn_time()
+        self.respawn_timer = 0
+        self.game = game
 
     @property
     def x(self):
@@ -71,6 +76,8 @@ class Enemy:
             player (Player): The player object to interact with.
         """
         if not self.alive:
+            if time.time() >= self.respawn_timer:
+                self.respawn()
             return
 
         distance_to_player = self._calculate_distance(player._x, player._y)
@@ -78,6 +85,14 @@ class Enemy:
         if distance_to_player < self.CHASE_DISTANCE:
             self._move_towards(player._x, player._y)
             self.attack_player(player)
+
+    def respawn(self):
+        """Respawn the enemy at its initial position."""
+        self._x = self.initial_x
+        self._y = self.initial_y
+        self.health = self.max_health
+        self.alive = True
+        self.respawn_time = self._random_respawn_time()
 
     def attack_player(self, player):
         """
@@ -104,8 +119,11 @@ class Enemy:
             self.destroy()
 
     def destroy(self):
-        """Mark the enemy as dead."""
+        """Mark the enemy as dead and start the respawn timer."""
         self.alive = False
+        self.respawn_timer = time.time() + self.respawn_time
+        # Notify the game to increment the player's kill count
+        self.game.player.increase_kill_count()
 
     def _calculate_distance(self, target_x, target_y):
         """
@@ -156,3 +174,12 @@ class Enemy:
             float: A random cooldown duration in seconds.
         """
         return random.uniform(self.MIN_COOLDOWN, self.MAX_COOLDOWN)
+
+    def _random_respawn_time(self):
+        """
+        Generate a random respawn time within the defined range.
+
+        Returns:
+            float: A random respawn time in seconds.
+        """
+        return random.uniform(self.MIN_RESPAWN_TIME, self.MAX_RESPAWN_TIME)

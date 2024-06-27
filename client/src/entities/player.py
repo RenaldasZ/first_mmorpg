@@ -79,7 +79,6 @@ class Player:
             self.update_time = current_time
             self.frame_index = (self.frame_index + 1) % len(self.animation_list[self.action])
             self.image = self.animation_list[self.action][self.frame_index]
-            # print(f"action {self.action} frame_index {self.frame_index}")
 
     def update_action(self, new_action):
         """
@@ -154,7 +153,6 @@ class Player:
         if self.health == 0:
             self.update_action(6)
             # Handle player death if needed
-            pass
 
     def heal(self, amount):
         """
@@ -165,33 +163,37 @@ class Player:
         """
         self.health = min(MAX_PLAYER_HEALTH, self.health + amount)
 
-    def release_attack(self, enemy):
+    def add_skill(self, skill):
         """
-        Release the chosen attack on the enemy.
+        Add a skill to the player's skill list.
 
         Args:
-            enemy: The enemy to be attacked.
+            skill (Skill): The skill to be added.
         """
-        if self.current_attack and self._is_enemy_within_range(enemy):
-            enemy.take_damage(self.attack_damage)
-            self.update_action(self.current_attack)
-            self.current_attack = None
-
-    def add_skill(self, skill):
         self.skills.append(skill)
 
     def select_skill(self, index):
+        """
+        Select a skill from the skill list.
+
+        Args:
+            index (int): The index of the skill to be selected.
+        """
         if 0 <= index < len(self.skills):
             self.selected_skill_index = index
 
     def use_selected_skill(self, enemy):
+        """
+        Use the selected skill on an enemy.
+
+        Args:
+            enemy (Enemy): The enemy to use the skill on.
+        """
         if self.skills:
             skill = self.skills[self.selected_skill_index]
             if skill.use(pygame.time.get_ticks()):
                 print(f"Used skill: {skill.name} on enemy at position ({enemy.x}, {enemy.y})")
                 enemy.take_damage(skill.damage)
-                print(self.enemy_kill_count)
-                # self.respawn_enemy(enemy)
 
     def _is_enemy_within_range(self, enemy):
         """
@@ -205,3 +207,7 @@ class Player:
         """
         distance_to_enemy = math.hypot(self._x - enemy._x, self._y - enemy._y)
         return distance_to_enemy < self.attack_range
+
+    def increase_kill_count(self):
+        """Increase the kill count when an enemy is killed."""
+        self.enemy_kill_count += 1
