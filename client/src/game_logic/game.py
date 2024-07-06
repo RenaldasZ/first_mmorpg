@@ -69,14 +69,14 @@ class Game:
 
         self.skill_inventory_renderer = SkillInventoryRenderer(self.player, self.screen, self.font)
 
-        fireball_icon = pygame.image.load('assets/player/skill1.png')
-        iceblast_icon = pygame.image.load('assets/player/skill2.png')
+        attack_1_icon = pygame.image.load('assets/player/skill1.png')
+        attack_2_icon = pygame.image.load('assets/player/skill2.png')
 
-        fireball = Skill('Fireball', fireball_icon, cooldown=1000, damage=10)
-        iceblast = Skill('Iceblast', iceblast_icon, cooldown=2000, damage=50)
+        attack_1 = Skill('attack_1', attack_1_icon, cooldown=1000, damage=10)
+        attack_2 = Skill('attack_2', attack_2_icon, cooldown=2000, damage=50)
 
-        self.player.add_skill(fireball)
-        self.player.add_skill(iceblast)
+        self.player.add_skill(attack_1)
+        self.player.add_skill(attack_2)
 
     def handle_events(self):
         """Handle game events such as player inputs, NPC interactions, and transitions."""

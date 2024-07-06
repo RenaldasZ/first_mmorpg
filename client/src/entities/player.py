@@ -56,7 +56,7 @@ class Player:
             SCALE = 1
 
             # Number of frames for each animation (idle, walk, jump, attack_1, attack_2, get_hit, die)
-            animation_steps = [7, 6, 0, 0, 0, 4, 10]
+            animation_steps = [7, 6, 0, 4, 4, 4, 10]
 
             # Create the animation list using list comprehensions
             animation_list = [
@@ -72,13 +72,15 @@ class Player:
         """
         Update the current frame of the animation based on the cooldown time.
         """
-        ANIMATION_COOLDOWN = 100  # milliseconds
         current_time = pygame.time.get_ticks()
+    
+        ANIMATION_COOLDOWN = 100
 
         if current_time - self.update_time > ANIMATION_COOLDOWN:
             self.update_time = current_time
             self.frame_index = (self.frame_index + 1) % len(self.animation_list[self.action])
             self.image = self.animation_list[self.action][self.frame_index]
+            print(f"Updated animation frame: {self.frame_index} for action: {self.action}")
 
     def update_action(self, new_action):
         """
@@ -91,6 +93,7 @@ class Player:
             self.action = new_action
             self.frame_index = 0
             self.update_time = pygame.time.get_ticks()
+            print(f"Action updated to: {self.action}")
 
     @property
     def position(self):
@@ -192,8 +195,13 @@ class Player:
         if self.skills:
             skill = self.skills[self.selected_skill_index]
             if skill.use(pygame.time.get_ticks()):
-                print(f"Used skill: {skill.name} on enemy at position ({enemy.x}, {enemy.y})")
                 enemy.take_damage(skill.damage)
+                print(f"Used skill: {skill.name} on enemy at position ({enemy._x}, {enemy._y})")
+                # Set the appropriate action for the skill
+                if self.selected_skill_index == 0:
+                    self.update_action(3)  # attack_1
+                elif self.selected_skill_index == 1:
+                    self.update_action(4)  # attack_2
 
     def _is_enemy_within_range(self, enemy):
         """
@@ -211,3 +219,4 @@ class Player:
     def increase_kill_count(self):
         """Increase the kill count when an enemy is killed."""
         self.enemy_kill_count += 1
+
