@@ -12,7 +12,7 @@ class Player:
     Represents the player in the game, handling position, health, inventory, and animations.
     """
     
-    def __init__(self, sprite_sheet, size=DEFAULT_PLAYER_SIZE, attack_damage=1, attack_range=100, enemy_kill_count=0):
+    def __init__(self, sprite_sheet, size=DEFAULT_PLAYER_SIZE, attack_damage=0, attack_range=100, enemy_kill_count=0):
         """
         Initialize the Player instance.
 
@@ -38,6 +38,10 @@ class Player:
         self.action = 0  # 0: idle, 1: walk, 2: jump, 3: attack_1, 4: attack_2, 5: get_hit, 6: die
         self.image = self.animation_list[self.action][self.frame_index]
         self.update_time = pygame.time.get_ticks()
+        self.current_attack = None
+
+        self.skills = []
+        self.selected_skill_index = 0
 
     def load_animation(self):
         """
@@ -75,7 +79,6 @@ class Player:
             self.update_time = current_time
             self.frame_index = (self.frame_index + 1) % len(self.animation_list[self.action])
             self.image = self.animation_list[self.action][self.frame_index]
-            print(f"action {self.action} frame_index {self.frame_index}")
 
     def update_action(self, new_action):
         """
@@ -146,11 +149,10 @@ class Player:
             damage (int): The amount of damage to be taken.
         """
         self.health = max(0, self.health - damage)
-        self.update_action(5)  # Change action to get_hit
+        self.update_action(5)  # get_hit
         if self.health == 0:
-            self.update_action(6)  # Change action to die
+            self.update_action(6)
             # Handle player death if needed
-            pass
 
     def heal(self, amount):
         """
@@ -161,15 +163,37 @@ class Player:
         """
         self.health = min(MAX_PLAYER_HEALTH, self.health + amount)
 
-    def attack(self, enemy):
+    def add_skill(self, skill):
         """
-        Attack an enemy if it is within range.
+        Add a skill to the player's skill list.
 
         Args:
-            enemy: The enemy to be attacked.
+            skill (Skill): The skill to be added.
         """
-        if self._is_enemy_within_range(enemy):
-            enemy.take_damage(self.attack_damage)
+        self.skills.append(skill)
+
+    def select_skill(self, index):
+        """
+        Select a skill from the skill list.
+
+        Args:
+            index (int): The index of the skill to be selected.
+        """
+        if 0 <= index < len(self.skills):
+            self.selected_skill_index = index
+
+    def use_selected_skill(self, enemy):
+        """
+        Use the selected skill on an enemy.
+
+        Args:
+            enemy (Enemy): The enemy to use the skill on.
+        """
+        if self.skills:
+            skill = self.skills[self.selected_skill_index]
+            if skill.use(pygame.time.get_ticks()):
+                print(f"Used skill: {skill.name} on enemy at position ({enemy.x}, {enemy.y})")
+                enemy.take_damage(skill.damage)
 
     def _is_enemy_within_range(self, enemy):
         """
@@ -183,3 +207,7 @@ class Player:
         """
         distance_to_enemy = math.hypot(self._x - enemy._x, self._y - enemy._y)
         return distance_to_enemy < self.attack_range
+
+    def increase_kill_count(self):
+        """Increase the kill count when an enemy is killed."""
+        self.enemy_kill_count += 1

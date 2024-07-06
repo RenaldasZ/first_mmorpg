@@ -11,10 +11,10 @@ class SpawnManager:
             (3797, 3286), (4628, 2841), (6078, 2799), (6820, 3296), (7188, 3953),
             (7578, 4897), (7200, 5746), (6773, 6305)
         ]
-        self.game.enemies = [Enemy(x, y) for x, y in enemy_positions]
+        self.game.enemies = [Enemy(x, y, self.game) for x, y in enemy_positions]
 
     def spawn_enemy(self, x, y):
-        new_enemy = Enemy(x, y)
+        new_enemy = Enemy(x, y, self.game)
         self.game.enemies.append(new_enemy)
         self.game.enemy = new_enemy
         print(self.game.enemy.x, self.game.enemy.y, self.game.enemy.alive)
@@ -23,4 +23,4 @@ class SpawnManager:
         enemy_positions = [
             (7000, 7000), (7200, 7200), (7400, 7400)
         ]
-        self.game.enemies = [Enemy(x, y) for x, y in enemy_positions]
+        self.game.enemies = [Enemy(x, y, self.game) for x, y in enemy_positions]

@@ -54,11 +54,12 @@ class GameRenderer:
             self.game.screen.blit(self.question_mark_image, (screen_x, screen_y))
 
         # For the second NPC
-        npc2_x, npc2_y = self.game.NPC_POSITIONS[NPC.TILE_NPC_2]
-        if self.game.quest_handler.axe_head_returned and self.game.quest_handler.stick_returned:
-            screen_x = npc2_x - player._x + screen_size[0] // 2
-            screen_y = npc2_y - player._y + screen_size[1] // 2 - self.question_mark_image.get_height()
-            self.game.screen.blit(self.question_mark_image, (screen_x, screen_y))
+        if self.game.quest_handler.first_quest_completed() and not self.game.quest_handler.second_quest_completed():
+            npc2_x, npc2_y = self.game.NPC_POSITIONS[NPC.TILE_NPC_2]
+            if not self.game.quest_handler.empty_vial_returned or not self.game.quest_handler.filled_vial_of_water:
+                screen_x = npc2_x - player._x + screen_size[0] // 2
+                screen_y = npc2_y - player._y + screen_size[1] // 2 - self.question_mark_image.get_height()
+                self.game.screen.blit(self.question_mark_image, (screen_x, screen_y))
 
     def handle_mouse_right_click(self):
         if pygame.mouse.get_pressed()[2]:
