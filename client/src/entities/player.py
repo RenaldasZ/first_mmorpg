@@ -1,6 +1,6 @@
 # src/entities/player.py
 import pygame
-from src.utils.stack import Stack
+from src.utils import Stack
 import math
 
 DEFAULT_PLAYER_SIZE = 100

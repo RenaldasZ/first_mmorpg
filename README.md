@@ -60,6 +60,7 @@ Entities/:
 - `enemy.py`: Class definitions for enemies.
 - `npc.py`: Class definitions for non-player characters.
 - `player.py`: Class definitions for players.
+- `skill.py`: Class definitions for player skills.
 
 Game Logic/:
 
@@ -75,6 +76,7 @@ Rendering/:
 - `game_renderer.py`: Renders the game world, including players, enemies, NPCs, and objects.
 - `map_renderer.py`: Renders the map tiles and objects.
 - `player_renderer.py`: Handles rendering specific to player-related UI elements.
+- `skill_inventory_renderer.py`: Renders player-related skill inventory.
 
 Utils/:
 

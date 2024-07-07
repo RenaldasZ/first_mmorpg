@@ -1,22 +1,10 @@
 # src/game_logic/game.py
 import pygame
-from src.entities.player import Player
-from src.entities.enemy import Enemy
-from src.entities.npc import NPC
-from src.systems.input_handler import InputHandler
-from src.rendering.game_renderer import GameRenderer
-from src.rendering.map_renderer import TILE_WELL, TILE_TREE
-from src.game_logic.player_manager import PlayerManager
-from src.game_logic.quest_handler import QuestHandler
-from src.game_logic.spawn_manager import SpawnManager
-from src.game_logic.transition_manager import TransitionManager
-from src.game_logic.interaction_manager import InteractionManager
-from src.rendering.player_renderer import PlayerRenderer
-from src.utils.item_handler import ItemHandler
-from src.utils.barrier import collides_with_barrier
-from src.utils.sprite_sheet import SpriteSheet
-from src.rendering.skill_inventory_renderer import SkillInventoryRenderer
-from src.entities.skill import Skill
+from src.entities import Player, Enemy, NPC, Skill
+from src.systems import InputHandler
+from src.game_logic import PlayerManager, QuestHandler, SpawnManager, TransitionManager, InteractionManager
+from src.rendering import GameRenderer, PlayerRenderer, SkillInventoryRenderer, TILE_WELL, TILE_TREE
+from src.utils import ItemHandler, collides_with_barrier, SpriteSheet
 
 class Game:
     """Main game class responsible for initializing and managing the game state, including player, NPCs, enemies, and game events."""

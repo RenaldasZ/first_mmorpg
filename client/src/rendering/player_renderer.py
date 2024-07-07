@@ -1,7 +1,7 @@
 # src/rendering/player_renderer.py
 
 import pygame
-from src.entities.player import MAX_PLAYER_HEALTH
+from src.entities import MAX_PLAYER_HEALTH
 
 WHITE = (255, 255, 255)
 RED = (255, 0, 0)

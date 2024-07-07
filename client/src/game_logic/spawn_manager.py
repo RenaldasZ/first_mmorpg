@@ -1,5 +1,5 @@
 # src/game_logic/spawn_manager.py
-from src.entities.enemy import Enemy
+from src.entities import Enemy
 
 class SpawnManager:
     def __init__(self, game):

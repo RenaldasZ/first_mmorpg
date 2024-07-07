@@ -2,7 +2,7 @@
 import pygame
 from src.rendering.map_renderer import render_map
 from datetime import datetime, timedelta
-from src.entities.npc import NPC
+from src.entities import NPC
 
 WHITE = (255, 255, 255)
 

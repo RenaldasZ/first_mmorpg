@@ -1,12 +1,11 @@
 # src/entities/npc.py
-from src.rendering.map_renderer import TILE_NPC1, TILE_NPC2
 
 class NPC:
     """
     Represents non-player characters (NPCs) in the game, handling interactions and quests.
     """
-    TILE_NPC_1 = TILE_NPC1
-    TILE_NPC_2 = TILE_NPC2
+    TILE_NPC_1 = 20
+    TILE_NPC_2 = 21
 
     # NPC positions (x, y) in the map
     POSITIONS = {

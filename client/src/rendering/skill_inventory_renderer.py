@@ -5,7 +5,6 @@ class SkillInventoryRenderer:
     def __init__(self, player, screen, font):
         self.player = player
         self.screen = screen
-        self.font = font
 
     def render(self):
         x, y = 200, 200

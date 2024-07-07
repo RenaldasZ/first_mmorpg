@@ -1,6 +1,6 @@
 # src/systems/input_handler.py
 import pygame
-from ui.exit_button_renderer import is_exit_button_clicked
+from ui import is_exit_button_clicked
 
 class InputHandler:
     def __init__(self, game):
