@@ -1,6 +1,6 @@
 import pygame
 import sys
-from ui.menu import Menu
+from ui import Menu
 from src.game_logic.game import Game
 
 def initialize_pygame():

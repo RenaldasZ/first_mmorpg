@@ -55,6 +55,51 @@ maps/: Directory for storing game maps.
 
 ## Source Code:
 
+```py 
+FIRST_MMORPG/
+├── client/
+│   ├── assets/
+│   └── maps/
+├── src/
+│   ├── entities/
+│   │   ├── __init__.py
+│   │   ├── enemy.py
+│   │   ├── npc.py
+│   │   ├── player.py
+│   │   └── skill.py
+│   ├── game_logic/
+│   │   ├── __init__.py
+│   │   ├── game.py
+│   │   ├── interaction_manager.py
+│   │   ├── player_manager.py
+│   │   ├── quest_handler.py
+│   │   ├── spawn_manager.py
+│   │   └── transition_manager.py
+│   ├── rendering/
+│   │   ├── __init__.py
+│   │   ├── game_renderer.py
+│   │   ├── map_renderer.py
+│   │   ├── player_renderer.py
+│   │   └── skill_inventory_renderer.py
+│   ├── systems/
+│   │   ├── __init__.py
+│   │   └── input_handler.py
+│   ├── utils/
+│   │   ├── __init__.py
+│   │   ├── barrier.py
+│   │   ├── item_handler.py
+│   │   ├── sprite_sheet.py
+│   │   └── stack.py
+│   └── ui/
+│       ├── __init__.py
+│       ├── button.py
+│       ├── exit_button_renderer.py
+│       └── menu.py
+├── main.py
+├── screenshots/
+└── map_editor.py
+```
+
 Entities/:
 
 - `enemy.py`: Class definitions for enemies.
@@ -84,6 +129,7 @@ Utils/:
 - `item_handler.py`: Manages items within the game, including inventory and item interactions.
 - `sprite_sheet.py`: Utility for handling sprite sheets and extracting individual sprites.
 - `stack.py`: Implements a stack data structure, potentially used for game mechanics or data handling.
+
 
 ## How to Contribute:
 
