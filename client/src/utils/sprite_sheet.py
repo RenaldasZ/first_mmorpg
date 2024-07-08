@@ -2,8 +2,8 @@
 import pygame
 
 class SpriteSheet:
-    def __init__(self):
-        self.sheet = pygame.image.load("assets/player/player_spritesheet.png").convert_alpha()
+    def __init__(self, file_path):
+        self.sheet = pygame.image.load(file_path).convert_alpha()
     
     def get_image(self, frame, row, width, height, scale):
         # Create a new blank image with transparency

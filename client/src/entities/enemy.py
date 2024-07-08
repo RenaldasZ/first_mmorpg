@@ -14,7 +14,7 @@ class Enemy:
     MIN_RESPAWN_TIME = 5  # Minimum respawn time in seconds
     MAX_RESPAWN_TIME = 10 # Maximum respawn time in seconds
 
-    def __init__(self, x, y, game, size=100, speed=2, max_health=100, attack_damage=1, attack_range=50):
+    def __init__(self, x, y, game, size=100, speed=2, max_health=100, attack_damage=10, attack_range=50):
         """
         Initialize the Enemy instance.
 

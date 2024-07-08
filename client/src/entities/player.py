@@ -33,9 +33,10 @@ class Player:
         self.enemy_kill_count = enemy_kill_count
         
         self.sprite_sheet = sprite_sheet
-        self.animation_list = self.load_animation()
+        self.animation_list = {}
         self.frame_index = 0
         self.action = 0  # 0: idle, 1: walk, 2: jump, 3: attack_1, 4: attack_2, 5: get_hit, 6: die
+        self.load_animation(self.action)
         self.image = self.animation_list[self.action][self.frame_index]
         self.update_time = pygame.time.get_ticks()
         self.current_attack = None
@@ -43,12 +44,18 @@ class Player:
         self.skills = []
         self.selected_skill_index = 0
 
-    def load_animation(self):
-        """
-        Load the animation frames from the sprite sheet.
+        self.action_temporary = False  # Flag to indicate if the action is temporary
 
-        Returns:
-            list: A list of animation frames for different actions.
+        self.death_time = None
+        self.respawn_delay = 1000  # 1 seconds delay for death animation
+        self.is_dead = False
+
+    def load_animation(self, action):
+        """
+        Load the animation frames from the sprite sheet for a specific action.
+
+        Args:
+            action (int): The action to load animations for.
         """
         try:
             FRAME_WIDTH = 100
@@ -58,15 +65,13 @@ class Player:
             # Number of frames for each animation (idle, walk, jump, attack_1, attack_2, get_hit, die)
             animation_steps = [7, 6, 0, 4, 4, 4, 10]
 
-            # Create the animation list using list comprehensions
-            animation_list = [
-                [self.sprite_sheet.get_image(x, y, FRAME_WIDTH, FRAME_HEIGHT, SCALE) for x in range(steps)]
-                for y, steps in enumerate(animation_steps)
-            ]
-            return animation_list
+            if action not in self.animation_list:
+                self.animation_list[action] = [
+                    self.sprite_sheet.get_image(x, action, FRAME_WIDTH, FRAME_HEIGHT, SCALE)
+                    for x in range(animation_steps[action])
+                ]
         except Exception as e:
             print(f"Error loading animations: {e}")
-            return []
 
     def update_animation(self):
         """
@@ -78,22 +83,32 @@ class Player:
 
         if current_time - self.update_time > ANIMATION_COOLDOWN:
             self.update_time = current_time
-            self.frame_index = (self.frame_index + 1) % len(self.animation_list[self.action])
+            self.frame_index += 1
+
+            if self.frame_index >= len(self.animation_list[self.action]):
+                if self.action_temporary:
+                    self.update_action(0)  # Return to idle
+                else:
+                    self.frame_index = 0  # Loop the animation
+
             self.image = self.animation_list[self.action][self.frame_index]
             print(f"Updated animation frame: {self.frame_index} for action: {self.action}")
 
-    def update_action(self, new_action):
+    def update_action(self, new_action, temporary=False):
         """
         Update the current action of the player.
 
         Args:
             new_action (int): The new action to be set (0: idle, 1: walk, 2: jump, 3: attack_1, 4: attack_2, 5: get_hit, 6: die).
+            temporary (bool): Flag indicating if the action is temporary and should return to idle afterward.
         """
         if new_action != self.action:
             self.action = new_action
             self.frame_index = 0
             self.update_time = pygame.time.get_ticks()
-            print(f"Action updated to: {self.action}")
+            self.load_animation(new_action)
+            self.action_temporary = temporary
+            print(f"Action updated to: {self.action}, temporary: {self.action_temporary}")
 
     @property
     def position(self):
@@ -152,10 +167,30 @@ class Player:
             damage (int): The amount of damage to be taken.
         """
         self.health = max(0, self.health - damage)
-        self.update_action(5)  # get_hit
-        if self.health == 0:
-            self.update_action(6)
-            # Handle player death if needed
+        self.update_action(5, temporary=True)
+        if self.health == 0 and not self.is_dead:
+            self.update_action(6)  # Die action does not revert to idle
+            self.death_time = pygame.time.get_ticks()
+            self.is_dead = True
+
+    def update(self):
+        """
+        Update player state, including animations and checking for respawn.
+        """
+        if self.is_dead and pygame.time.get_ticks() - self.death_time >= self.respawn_delay:
+            self.respawn()
+        else:
+            self.update_animation()  # Update animation if not dead or waiting to respawn
+
+    def respawn(self):
+        """
+        Respawn the player by resetting the position and health.
+        """
+        self.position = INITIAL_PLAYER_POSITION
+        self.health = MAX_PLAYER_HEALTH
+        self.update_action(0)
+        self.is_dead = False
+        print("Player has respawned at the initial position with full health.")
 
     def heal(self, amount):
         """
@@ -199,9 +234,9 @@ class Player:
                 print(f"Used skill: {skill.name} on enemy at position ({enemy._x}, {enemy._y})")
                 # Set the appropriate action for the skill
                 if self.selected_skill_index == 0:
-                    self.update_action(3)  # attack_1
+                    self.update_action(3, temporary=True)  # attack_1 is a temporary action
                 elif self.selected_skill_index == 1:
-                    self.update_action(4)  # attack_2
+                    self.update_action(4, temporary=True)  # attack_2 is a temporary action
 
     def _is_enemy_within_range(self, enemy):
         """
@@ -219,4 +254,3 @@ class Player:
     def increase_kill_count(self):
         """Increase the kill count when an enemy is killed."""
         self.enemy_kill_count += 1
-

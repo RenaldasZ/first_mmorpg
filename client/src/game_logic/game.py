@@ -35,7 +35,7 @@ class Game:
         self.transition_area = pygame.Rect(9800, 200, 200, 200)
         self.transitioning = False
 
-        self.sprite_sheet = SpriteSheet()
+        self.sprite_sheet = SpriteSheet("assets/player/player_spritesheet.png")
         self.player = Player(self.sprite_sheet)
 
         self.player_manager = PlayerManager(self)

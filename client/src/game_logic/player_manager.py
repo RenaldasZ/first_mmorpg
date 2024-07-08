@@ -21,6 +21,7 @@ class PlayerManager:
         if self.game.target_pos:
             self.move_player_to_target()
         self.game.player.update_animation()
+        self.game.player.update()
 
     def move_player_to_target(self):
         move_vector = pygame.math.Vector2(self.game.target_pos[0] - self.game.player.position[0], self.game.target_pos[1] - self.game.player.position[1])
