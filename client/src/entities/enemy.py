@@ -1,4 +1,5 @@
 # src/entities/enemy.py
+
 import math
 import random
 import time
@@ -14,29 +15,29 @@ class Enemy:
     MIN_RESPAWN_TIME = 5  # Minimum respawn time in seconds
     MAX_RESPAWN_TIME = 10 # Maximum respawn time in seconds
 
-    def __init__(self, x, y, game, size=100, speed=2, max_health=100, attack_damage=10, attack_range=50):
+    def __init__(self, x, y, game, level=1, size=100, speed=2, max_health=100, attack_range=100):
         """
         Initialize the Enemy instance.
 
         Args:
             x (float): The initial x-coordinate of the enemy.
             y (float): The initial y-coordinate of the enemy.
+            level (int): The level of the enemy.
             size (int): The size of the enemy sprite.
             speed (float): The movement speed of the enemy.
             max_health (int): The maximum health of the enemy.
-            attack_damage (float): The damage dealt by the enemy in an attack.
             attack_range (float): The range within which the enemy can attack.
         """
         self.initial_x = x
         self.initial_y = y
         self._x = x
         self._y = y
+        self.level = level
         self.size = size
         self.speed = speed
-        self.max_health = max_health
-        self.health = max_health
+        self.max_health = max_health + (level - 1) * 20  # Increase health with level
+        self.health = self.max_health
         self.alive = True
-        self.attack_damage = attack_damage
         self.attack_range = attack_range
         self.last_attack_time = 0
         self.attack_cooldown = self._random_cooldown()
@@ -65,7 +66,12 @@ class Enemy:
         self._y = value
 
     def get_health_percentage(self):
-        """Get the current health as a percentage of the maximum health."""
+        """
+        Get the current health as a percentage of the maximum health.
+
+        Returns:
+            float: Current health as a percentage of max health.
+        """
         return (self.health / self.max_health) * 100
 
     def update(self, player):
@@ -103,7 +109,8 @@ class Enemy:
         """
         current_time = time.time()
         if self._is_within_range(player._x, player._y, self.attack_range) and (current_time - self.last_attack_time) >= self.attack_cooldown:
-            player.take_damage(self.attack_damage)
+            random_attack_damage = random.randint(1, 3) + (self.level - 1)  # Increase damage with level
+            player.take_damage(random_attack_damage)
             self.last_attack_time = current_time
             self.attack_cooldown = self._random_cooldown()
 
@@ -118,12 +125,23 @@ class Enemy:
         if self.health <= 0:
             self.destroy()
 
+    def get_experience_reward(self):
+        """
+        Calculate the experience points awarded to the player when this enemy is defeated.
+        
+        Returns:
+            int: The experience points reward based on the enemy's level.
+        """
+        base_experience = 10  # Base experience points
+        level_multiplier = 1.5  # Multiplier to increase experience based on enemy's level
+        return int(base_experience + (self.level - 1) * level_multiplier)
+    
     def destroy(self):
         """Mark the enemy as dead and start the respawn timer."""
         self.alive = False
         self.respawn_timer = time.time() + self.respawn_time
-        # Notify the game to increment the player's kill count
-        self.game.player.increase_kill_count()
+        # Notify the game to increment the player's kill count and add experience
+        self.game.player.increase_kill_count(self.get_experience_reward())
 
     def _calculate_distance(self, target_x, target_y):
         """
@@ -152,7 +170,7 @@ class Enemy:
         self.x += self.speed * math.cos(direction)
         self.y += self.speed * math.sin(direction)
 
-    def _is_within_range(self, target_x, target_y, range):
+    def _is_within_range(self, target_x, target_y, attack_range):
         """
         Check if a target is within a given range.
 
@@ -164,7 +182,7 @@ class Enemy:
         Returns:
             bool: True if the target is within range, False otherwise.
         """
-        return self._calculate_distance(target_x, target_y) < range
+        return self._calculate_distance(target_x, target_y) < attack_range
 
     def _random_cooldown(self):
         """

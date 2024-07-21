@@ -50,6 +50,12 @@ class Player:
         self.respawn_delay = 1000  # 1 seconds delay for death animation
         self.is_dead = False
 
+        # Attributes for leveling
+        self.level = 1
+        self.experience = 0
+        self.experience_to_next_level = 60
+        self.max_health = MAX_PLAYER_HEALTH
+
     def load_animation(self, action):
         """
         Load the animation frames from the sprite sheet for a specific action.
@@ -92,7 +98,7 @@ class Player:
                     self.frame_index = 0  # Loop the animation
 
             self.image = self.animation_list[self.action][self.frame_index]
-            print(f"Updated animation frame: {self.frame_index} for action: {self.action}")
+            # print(f"Updated animation frame: {self.frame_index} for action: {self.action}")
 
     def update_action(self, new_action, temporary=False):
         """
@@ -108,7 +114,7 @@ class Player:
             self.update_time = pygame.time.get_ticks()
             self.load_animation(new_action)
             self.action_temporary = temporary
-            print(f"Action updated to: {self.action}, temporary: {self.action_temporary}")
+            # print(f"Action updated to: {self.action}, temporary: {self.action_temporary}")
 
     @property
     def position(self):
@@ -199,7 +205,7 @@ class Player:
         Args:
             amount (int): The amount of health to be restored.
         """
-        self.health = min(MAX_PLAYER_HEALTH, self.health + amount)
+        self.health = min(self.max_health, self.health + amount)
 
     def add_skill(self, skill):
         """
@@ -251,6 +257,38 @@ class Player:
         distance_to_enemy = math.hypot(self._x - enemy._x, self._y - enemy._y)
         return distance_to_enemy < self.attack_range
 
-    def increase_kill_count(self):
-        """Increase the kill count when an enemy is killed."""
+    def increase_kill_count(self, experience_points):
+        """Increase the kill count and add experience when an enemy is killed."""
         self.enemy_kill_count += 1
+        self.add_experience(experience_points)
+
+    def add_experience(self, amount):
+        """
+        Add experience points to the player and handle leveling up.
+
+        Args:
+            amount (int): The amount of experience points to be added.
+        """
+        self.experience += amount
+        while self.experience >= self.experience_to_next_level:
+            self.level_up()
+
+    def total_attack_damage(self):
+        """
+        Calculate the total attack damage considering the selected skill's damage.
+        """
+        if self.skills:
+            selected_skill = self.skills[self.selected_skill_index]
+            return self.attack_damage + selected_skill.damage
+        return self.attack_damage
+
+    def level_up(self):
+        """Handle the player leveling up."""
+        self.experience -= self.experience_to_next_level
+        self.level += 1
+        self.experience_to_next_level = int(self.experience_to_next_level * 1.5)  # Example: Increase required XP by 50%
+        self.attack_damage += 5  # Example: Increase attack damage
+
+        self.max_health += 20    # Example: Increase max health
+        self.health = self.max_health  # Heal player to full health upon leveling up
+        print(f"Leveled up! New level: {self.level}, New max health: {self.max_health}, New attack damage: {self.attack_damage}")

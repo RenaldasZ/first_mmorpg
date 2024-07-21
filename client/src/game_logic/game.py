@@ -109,15 +109,16 @@ class Game:
                 return enemy
         return None
 
-    def spawn_enemy(self, x, y):
+    def spawn_enemy(self, x, y, level=1):
         """
-        Spawn a new enemy at the specified coordinates.
+        Spawn a new enemy at the specified coordinates and level.
 
         Args:
             x (float): The x-coordinate to spawn the enemy.
             y (float): The y-coordinate to spawn the enemy.
+            level (int): The level of the enemy to spawn.
         """
-        new_enemy = Enemy(x, y, self)
+        new_enemy = Enemy(x, y, self, level=level)
         self.enemies.append(new_enemy)
 
     def handle_mouse_click(self, mouse_pos):

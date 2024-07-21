@@ -25,6 +25,7 @@ class GameRenderer:
         self.inventory_slot_size = 50
         self.inventory_margin = 10
         self.inventory_font = pygame.font.Font(None, 20)
+        self.enemy_font = pygame.font.Font(None, 24)
 
     def render(self):
         self.game.screen.fill(WHITE)
@@ -107,14 +108,32 @@ class GameRenderer:
 
         for enemy in self.game.enemies:
             if enemy.alive:
-                enemy_rect = pygame.Rect(enemy.x - enemy.size // 2, enemy.y - enemy.size // 2,
+                enemy_rect = pygame.Rect(enemy.x - enemy.size // 2 , enemy.y - enemy.size // 2,
                                           enemy.size, enemy.size)
                 if enemy_rect.colliderect(viewport_rect):
                     enemy_screen_pos = (
-                        enemy.x - player._x + screen_size[0] // 2,
-                        enemy.y - player._y + screen_size[1] // 2
+                        enemy.x - player._x + screen_size[0] // 2 - 100,
+                        enemy.y - player._y + screen_size[1] // 2 - 100
                     )
+
+                    # Calculate the rectangle position and size
+                    rect_x = enemy_screen_pos[0] - 5  # Adjust as needed
+                    rect_y = enemy_screen_pos[1] - 5  # Adjust as needed
+                    rect_width = self.enemy_image.get_width() + 10  # Adjust as needed
+                    rect_height = self.enemy_image.get_height() + 10  # Adjust as needed
+
+                    # Draw the red rectangle
+                    pygame.draw.rect(self.game.screen, (255, 0, 0), (rect_x, rect_y, rect_width, rect_height), 2)
+                    
+                    # Draw the enemy image
                     self.game.screen.blit(self.enemy_image, enemy_screen_pos)
+
+                    # Render enemy level
+                    level_text = f"Level {enemy.level}"
+                    level_surface = self.enemy_font.render(level_text, True, (0, 0, 0))
+                    level_rect = level_surface.get_rect()
+                    level_rect.topleft = (enemy_screen_pos[0], enemy_screen_pos[1] - 30)  # Adjust position as needed
+                    self.game.screen.blit(level_surface, level_rect)
 
     def render_players(self):
         player_manager = self.game.player_manager
@@ -167,8 +186,8 @@ class GameRenderer:
                     enemy.x - self.game.player._x + self.game.screen_size[0] // 2,
                     enemy.y - self.game.player._y + self.game.screen_size[1] // 2
                 )
-                health_bar_x = enemy_screen_pos[0]
-                health_bar_y = enemy_screen_pos[1] - 10
+                health_bar_x = enemy_screen_pos[0] - 100
+                health_bar_y = enemy_screen_pos[1] - 110
                 health_ratio = enemy.get_health_percentage() / 100
                 health_bar_width = int(self.game.player._size * health_ratio)
                 health_bar_rect = pygame.Rect(health_bar_x, health_bar_y, health_bar_width, 5)

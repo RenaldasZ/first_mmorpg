@@ -21,7 +21,9 @@ class InteractionManager:
         """
         Handles interaction with a well, healing the player and possibly converting an empty vial to a vial of water.
         """
-        self.game.player.heal(0.1)
+        if self.game.quest_handler.filled_vial_of_water:
+            self.game.player.heal(0.1)
+            
         if "Empty vial" in self.game.player.inventory.items and self.game.quest_handler.empty_vial_returned:
             self.game.player.remove_item_from_inventory("Empty vial")
             self.game.player.add_to_inventory("Vial of Water")
